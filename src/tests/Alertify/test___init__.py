@@ -62,7 +62,21 @@ class AlertifyTest(unittest.TestCase):
             'json': None,
         }
 
-        self.assertTupleEqual(
+        self.assertEqual(
+            self.alertify.healthcheck(),
+            ('OK', 200),
+        )
+
+    @patch('Alertify.health.Healthcheck.gotify_alive')
+    def test_bad_healthcheck(self, mock_gotify_alive):
+        """Test"""
+        mock_gotify_alive.return_value = {
+            'status': 408,
+            'reason': 'Request Timeout',
+            'json': None,
+        }
+
+        self.assertNotEqual(
             self.alertify.healthcheck(),
             ('OK', 200),
         )
