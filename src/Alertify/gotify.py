@@ -99,7 +99,7 @@ class Gotify:
             logging.warning(
                 'No client key is configured.  No messages could be retrieved.'
             )
-            return []
+            return dict()
         logging.debug('Fetching existing messages from Gotify')
         return self._call('GET', '/message')['json'].get('messages', [])
 

@@ -62,9 +62,9 @@ class GotifyTest(unittest.TestCase):
 
     def test_messages(self):
         """Test"""
-        self.assertListEqual(
+        self.assertDictEqual(
             self.gotify_client.messages(),
-            [],
+            dict(),
         )
 
     @patch('http.client.HTTPConnection.request')
