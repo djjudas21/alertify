@@ -5,6 +5,7 @@ import inspect
 import logging
 import os
 from distutils.util import strtobool
+from typing import Optional
 
 import yaml
 
@@ -23,7 +24,7 @@ class Config:
     listen_port = int(8080)
     verbose = int(0)
 
-    def __init__(self, configfile=None):
+    def __init__(self, configfile: Optional[str] = None):
         """
         Method to parse a configuration file
         """
@@ -50,14 +51,14 @@ class Config:
             else:
                 setattr(self, key, type(default_val)(userval))
 
-    def items(self):
+    def items(self) -> list:
         """
         Method to return an iterator for the configured items
         """
         return {key: getattr(self, key) for key in self.__dict__}.items()
 
     @classmethod
-    def keys(cls):
+    def keys(cls) -> list:
         """
         Method to return the defaults as a list of dict_keys
         """
@@ -74,7 +75,7 @@ class Config:
         ]
 
     @classmethod
-    def defaults(cls):
+    def defaults(cls) -> dict:
         """
         Classmethod to return the defaults as a dictionary
         """

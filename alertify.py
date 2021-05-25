@@ -12,7 +12,7 @@ from src import Alertify
 
 if __name__ == '__main__':
 
-    def parse_cli():
+    def parse_cli() -> argparse.ArgumentParser:
         """
         Function to parse the CLI
         """
@@ -45,9 +45,9 @@ if __name__ == '__main__':
 
         return parser.parse_args()
 
-    def main():
+    def main() -> int:
         """
-        main()
+        Main program logic
         """
         logging.basicConfig(
             format='%(levelname)s: %(message)s',
@@ -69,7 +69,6 @@ if __name__ == '__main__':
         # -----------------------------
 
         if args.healthcheck:
-            # Invert the sense of 'healthy' for Unix CLI usage
             _, status = alertify.healthcheck()
             return status == 200
 

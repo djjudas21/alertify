@@ -2,6 +2,9 @@
 Module for handling the messaging
 """
 import logging
+from typing import Optional
+
+from .gotify import Gotify
 
 
 class MessageHandler:
@@ -9,12 +12,17 @@ class MessageHandler:
     Class to handle alert messaging
     """
 
-    def __init__(self, gotify_client, disable_resolved=False, delete_onresolve=False):
+    def __init__(
+        self,
+        gotify_client: Gotify,
+        disable_resolved: Optional[bool] = False,
+        delete_onresolve: Optional[bool] = False,
+    ):
         self.gotify = gotify_client
         self.disable_resolved = disable_resolved
         self.delete_onresolve = delete_onresolve
 
-    def process(self, alert):
+    def process(self, alert: dict) -> dict:
         """
         Method to process the alert message
         """

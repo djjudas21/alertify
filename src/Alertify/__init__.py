@@ -11,6 +11,7 @@ __version__ = '2.0'
 
 import json
 import logging
+from typing import Optional, Tuple
 
 import werkzeug.exceptions
 from flask import Flask, request, request_started
@@ -39,7 +40,7 @@ class Alertify(FlaskView):
         # Instantiate with defaults
         self.configure()
 
-    def configure(self, configfile=None):
+    def configure(self, configfile: Optional[str] = None):
         """
         Configure from a configfile
         """
@@ -71,7 +72,7 @@ class Alertify(FlaskView):
         webapp.run(host='0.0.0.0', port=self.config.listen_port)
 
     @route('/alert', methods=['POST'])
-    def alert(self):
+    def alert(self) -> Tuple[str, int]:
         """
         Handle the alerts from Alertmanager
         """
@@ -89,7 +90,7 @@ class Alertify(FlaskView):
         except UnboundLocalError:
             return '', 204
 
-    def healthcheck(self):
+    def healthcheck(self) -> Tuple[str, int]:
         """
         Perform a healthcheck and return the results
         """

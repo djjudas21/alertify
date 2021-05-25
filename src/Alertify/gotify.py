@@ -5,6 +5,7 @@ import http.client
 import json
 import logging
 import socket
+from typing import Optional
 
 
 class Gotify:
@@ -12,7 +13,7 @@ class Gotify:
     Class to handle Gotify communications
     """
 
-    def __init__(self, server, port, app_key, client_key=None):
+    def __init__(self, server: str, port: int, app_key: str, client_key: Optional[str] = None):
         self.api = http.client.HTTPConnection(server, port)
         self.app_key = app_key
         self.client_key = client_key
@@ -21,7 +22,7 @@ class Gotify:
             'Accept': 'application/json',
         }
 
-    def _call(self, method, url, body=None):
+    def _call(self, method: str, url: str, body: Optional[str] = None) -> dict:
         """
         Method to call Gotify with an app or client key as appropriate
         """
@@ -60,14 +61,14 @@ class Gotify:
 
         return resp_obj
 
-    def delete(self, msg_id):
+    def delete(self, msg_id: str) -> dict:
         """
         Method to delete a message from the Gotify server
         """
         logging.debug('Deleting message ID: %s', msg_id)
         return self._call('DELETE', f'/message/{msg_id}')
 
-    def find_byfingerprint(self, message):
+    def find_byfingerprint(self, message: str) -> list:
         """
         Method to return the ID of a matching message
         """
@@ -75,7 +76,7 @@ class Gotify:
             new_fingerprint = message['fingerprint']
         except KeyError:
             logging.debug('No fingerprint found in new message')
-            return None
+            return list()
 
         msg_list = []
         for old_message in self.messages():
@@ -91,7 +92,7 @@ class Gotify:
 
         return msg_list
 
-    def messages(self):
+    def messages(self) -> dict:
         """
         Method to return a list of messages from the Gotify server
         """
@@ -103,14 +104,14 @@ class Gotify:
         logging.debug('Fetching existing messages from Gotify')
         return self._call('GET', '/message')['json'].get('messages', [])
 
-    def send_alert(self, payload):
+    def send_alert(self, payload: dict) -> dict:
         """
         Method to send a message payload to a Gotify server
         """
         logging.debug('Sending message to Gotify')
         return self._call('POST', '/message', body=json.dumps(payload, indent=2))
 
-    def healthcheck(self):
+    def healthcheck(self) -> dict:
         """
         Method to perform a healthcheck against Gotify
         """
