@@ -70,7 +70,8 @@ if __name__ == '__main__':
 
         if args.healthcheck:
             _, status = alertify.healthcheck()
-            return status == 200
+            # Invert the sense of 'healthy' for Unix CLI usage
+            return not status == 200
 
         logging.info('Version: %s', Alertify.__version__)
 
