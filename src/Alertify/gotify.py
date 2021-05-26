@@ -56,7 +56,7 @@ class Gotify:
         }
         if len(response.content) > 0:
             try:
-                resp_obj['json'] = response.json
+                resp_obj['json'] = json.loads(response.content.decode())
             except json.decoder.JSONDecodeError as error:
                 logging.error('Could not parse JSON: %s', error)
 
