@@ -16,8 +16,7 @@ class ConfigTest(unittest.TestCase):
             'disable_resolved': bool(False),
             'gotify_key_app': str(),
             'gotify_key_client': str(),
-            'gotify_port': int(80),
-            'gotify_server': str('localhost'),
+            'gotify_url_prefix': str('http://localhost'),
             'listen_port': int(8080),
             'verbose': int(0),
         }

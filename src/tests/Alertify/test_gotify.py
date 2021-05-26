@@ -14,7 +14,7 @@ class GotifyTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.gotify_client = gotify.Gotify('', 0, '', '')
+        cls.gotify_client = gotify.Gotify('http://localhost', '')
 
     @classmethod
     def tearDownClass(cls):
@@ -26,15 +26,12 @@ class GotifyTest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    @patch('http.client.HTTPConnection.request')
-    @patch('http.client.HTTPConnection.getresponse')
-    @patch('http.client.HTTPResponse.read')
-    def test_delete(self, mock_request, mock_getresponse, mock_read):
+    @patch('requests.Session.request')
+    def test_delete(self, mock_request):
         """Test"""
-        mock_request.return_value.status = {}
-        mock_getresponse.return_value.status = 200
-        mock_getresponse.return_value.reason = 'OK'
-        mock_read.return_value = {}
+        mock_request.return_value.status_code = 200
+        mock_request.return_value.reason = 'OK'
+        mock_request.return_value.content = ''
 
         self.assertDictEqual(
             self.gotify_client.delete('123'),
@@ -67,18 +64,15 @@ class GotifyTest(unittest.TestCase):
             dict(),
         )
 
-    @patch('http.client.HTTPConnection.request')
-    @patch('http.client.HTTPConnection.getresponse')
-    @patch('http.client.HTTPResponse.read')
-    def test_send_alert(self, mock_request, mock_getresponse, mock_read):
+    @patch('requests.Session.request')
+    def test_send_alert_empty(self, mock_request):
         """Test"""
-        mock_request.return_value.status = {}
-        mock_getresponse.return_value.status = 200
-        mock_getresponse.return_value.reason = 'OK'
-        mock_read.return_value = {}
+        mock_request.return_value.status_code = 200
+        mock_request.return_value.reason = 'OK'
+        mock_request.return_value.content = ''
 
         self.assertDictEqual(
-            self.gotify_client.send_alert({}),
+            self.gotify_client.send_alert(dict()),
             {
                 'status': 200,
                 'reason': 'OK',
@@ -86,15 +80,35 @@ class GotifyTest(unittest.TestCase):
             },
         )
 
-    @patch('http.client.HTTPConnection.request')
-    @patch('http.client.HTTPConnection.getresponse')
-    @patch('http.client.HTTPResponse.read')
-    def test_healthcheck(self, mock_request, mock_getresponse, mock_read):
+    @patch('requests.Session.request')
+    def test_send_alert_dummy(self, mock_request):
         """Test"""
-        mock_request.return_value.status = {}
-        mock_getresponse.return_value.status = 200
-        mock_getresponse.return_value.reason = 'OK'
-        mock_read.return_value = {}
+        mock_request.return_value.status_code = 200
+        mock_request.return_value.reason = 'OK'
+        mock_request.return_value.content = ''
+
+        self.assertDictEqual(
+            self.gotify_client.send_alert(
+                {
+                    'title': 'TITLE',
+                    'message': 'MESSAGE',
+                    'priority': 0,
+                    'extras': dict(),
+                }
+            ),
+            {
+                'status': 200,
+                'reason': 'OK',
+                'json': None,
+            },
+        )
+
+    @patch('requests.Session.request')
+    def test_healthcheck(self, mock_request):
+        """Test"""
+        mock_request.return_value.status_code = 200
+        mock_request.return_value.reason = 'OK'
+        mock_request.return_value.content = ''
 
         self.assertDictEqual(
             self.gotify_client.healthcheck(),

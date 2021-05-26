@@ -17,8 +17,7 @@ The following environment variables will override any config or default:
   * DISABLE_RESOLVED  (default: False)
   * GOTIFY_KEY_APP    (default: None)
   * GOTIFY_KEY_CLIENT (default: None)
-  * GOTIFY_PORT       (default: 80)
-  * GOTIFY_SERVER     (default: localhost)
+  * GOTIFY_URL_PREFIX (default: http://localhost)
   * LISTEN_PORT       (default: 8080)
   * VERBOSE           (default: 0)
 ```
@@ -48,7 +47,7 @@ docker build . -t 'alertify:latest'
 
 e.g.
 ```bash
-docker run --name alertify -p 8080:8080 -e TZ=Europe/London -e GOTIFY_KEY_APP=_APPKEY_ -e GOTIFY_SERVER=gotify -e GOTIFY_PORT=80 alertify:latest
+docker run --name alertify -p 8080:8080 -e TZ=Europe/London -e GOTIFY_KEY_APP=_APPKEY_ -e GOTIFY_URL_PREFIX=http://gotify alertify:latest
 ```
 
 ## Compose:
@@ -76,7 +75,6 @@ services:
       - DELETE_ONRESOLVE=true
       - GOTIFY_KEY_APP=_APPKEY_
       - GOTIFY_KEY_CLIENT=_CLIENTKEY_
-      - GOTIFY_SERVER=gotify
-      - GOTIFY_PORT=80
+      - GOTIFY_URL_PREFIX=http://gotify
     restart: unless-stopped
 ```

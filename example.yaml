@@ -1,7 +1,6 @@
 ---
 disable_resolved: false
 gotify_key: sOmEsEcReTkEy1
-gotify_port: "80"
-gotify_server: gotifyserver.example.net
+gotify_url_prefix: http://gotifyserver.example.net
 listen_port: "8080"
 verbose: true

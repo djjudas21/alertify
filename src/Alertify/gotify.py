@@ -1,11 +1,12 @@
 """
 Module to handle communication with the Gotify server
 """
-import http.client
 import json
 import logging
 import socket
 from typing import Optional
+
+from requests import request
 
 
 class Gotify:
@@ -13,8 +14,8 @@ class Gotify:
     Class to handle Gotify communications
     """
 
-    def __init__(self, server: str, port: int, app_key: str, client_key: Optional[str] = None):
-        self.api = http.client.HTTPConnection(server, port)
+    def __init__(self, url_prefix: str, app_key: str, client_key: Optional[str] = None):
+        self.url_prefix = url_prefix
         self.app_key = app_key
         self.client_key = client_key
         self.base_headers = {
@@ -22,7 +23,7 @@ class Gotify:
             'Accept': 'application/json',
         }
 
-    def _call(self, method: str, url: str, body: Optional[str] = None) -> dict:
+    def _call(self, method: str, url: str, data: Optional[object] = None) -> dict:
         """
         Method to call Gotify with an app or client key as appropriate
         """
@@ -32,11 +33,15 @@ class Gotify:
         else:
             headers['X-Gotify-Key'] = self.app_key
 
-        logging.debug('Sending to Gotify:\n%s', body)
+        logging.debug('Sending to Gotify:\n%s', data)
 
         try:
-            self.api.request(method, url, body=body, headers=headers)
-            response = self.api.getresponse()
+            response = request(
+                method,
+                f'{self.url_prefix}{url}',
+                json=data,
+                headers=headers,
+            )
         except (ConnectionRefusedError, socket.gaierror) as error:
             logging.error('Connection error: %s', error)
             return {
@@ -45,14 +50,13 @@ class Gotify:
             }
 
         resp_obj = {
-            'status': response.status,
+            'status': response.status_code,
             'reason': response.reason,
             'json': None,
         }
-        rawbody = response.read()
-        if len(rawbody) > 0:
+        if len(response.content) > 0:
             try:
-                resp_obj['json'] = json.loads(rawbody.decode())
+                resp_obj['json'] = response.json
             except json.decoder.JSONDecodeError as error:
                 logging.error('Could not parse JSON: %s', error)
 
@@ -109,7 +113,7 @@ class Gotify:
         Method to send a message payload to a Gotify server
         """
         logging.debug('Sending message to Gotify')
-        return self._call('POST', '/message', body=json.dumps(payload, indent=2))
+        return self._call('POST', '/message', data=payload)
 
     def healthcheck(self) -> dict:
         """

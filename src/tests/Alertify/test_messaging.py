@@ -12,7 +12,9 @@ class MessageHandlerTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.messaging = messaging.MessageHandler(gotify.Gotify('', 0, '', ''))
+        cls.messaging = messaging.MessageHandler(
+            gotify.Gotify('http://localhost', '', '')
+        )
 
     @classmethod
     def tearDownClass(cls):

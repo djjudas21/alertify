@@ -12,7 +12,7 @@ class HealthcheckTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.healthcheck = health.Healthcheck(gotify.Gotify('', 0, '', ''))
+        cls.healthcheck = health.Healthcheck(gotify.Gotify('http://localhost', '', ''))
 
     @classmethod
     def tearDownClass(cls):

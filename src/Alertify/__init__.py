@@ -50,8 +50,7 @@ class Alertify(FlaskView):
 
         self.config = Config(configfile)
         self.gotify = Gotify(
-            self.config.gotify_server,
-            self.config.gotify_port,
+            self.config.gotify_url_prefix,
             self.config.gotify_key_app,
             self.config.gotify_key_client,
         )
